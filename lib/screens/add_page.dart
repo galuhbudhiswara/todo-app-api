@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app_api/widgets/custom_text_font.dart';
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({Key? key}) : super(key: key);
@@ -50,24 +51,49 @@ class _AddTodoPageState extends State<AddTodoPage> {
           "description": description,
           "is_completed": false,
         }));
+
     if (response.statusCode == 201) {
-      print('Creation succes');
+      titleController.text = '';
+      descriptionController.text = '';
+      showSuccessMessage('Creation succes');
+      print(response.data);
     } else {
-      print('Creation failed');
+      showErrorMessage('Creation failed');
       print(response.data);
     }
     Map obj = response.data;
   }
 
-  void showSuccessMessage() {
-    ScaffoldMessenger.of(context)
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(
+        content: CustomFontNormal(
+      text: message,
+      fontSize: 15,
+      color: Colors.black,
+      backgroundColor: Colors.white,
+    ));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+        content: CustomFontNormal(
+      text: message,
+      fontSize: 15,
+      color: Colors.black,
+      backgroundColor: Colors.red,
+    ));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard"),
+        title: const CustomFontNormal(
+          text: 'Add Todo',
+          fontSize: 15,
+        ),
         actions: const [],
       ),
       body: ListView(
